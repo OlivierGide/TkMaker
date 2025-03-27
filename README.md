@@ -8,14 +8,21 @@ This is version alpha 1.0 of the tkmaker project.
 
 ## Roadmap
 - [x] Create a basic GUI editor
-- [x] Add support for various Tkinter widgets
-- [x] Add real-time preview of the GUI design
-- [x] Add export functionality to generate Python code
-- [x] Add customizable properties for each widget
-- [x] Add save and load functionality for GUI projects
-- [ ] Add the possibility to create fast layouts from a layout collection
-- [ ] Add to congigure the grid layout
-- [ ] Add user manual
+- [x] Support for various Tkinter widgets
+- [x] Real-time preview of the GUI design
+- [x] Export functionality to generate Python code
+- [x] Customizable properties for each widget
+- [x] Save and load functionality for GUI projects
+- [ ] Display the tkinter error messages
+- [ ] Display à preview of the generated code
+- [ ] Create fast layouts from a layout collection
+- [ ] Configure the grid layout
+- [ ] Font selector
+- [x] Color selector
+- [ ] Functions placeholders with bindings to the widgets
+- [ ] Support menu and menu items création
+- [ ] User manual
+- [ ] Video Tutorial
 
 
 ## Features
