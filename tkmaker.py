@@ -503,6 +503,7 @@ class MainWindow:
         entryName.insert(0, widgetnames[str(self.selectedWidget.winfo_id())])
         entryName.grid(row=1, column=1, sticky=tk.W)
         entryName.bind("<FocusOut>", self.changeName)
+        entryNameTooltip=CreateToolTip(entryName, text="Change the widget name \n this will be used to have better variables names in the code")
 
         #Grey big labl with the mention "Parameters"
         label2 = tk.Label(self.frm_param, text="Parameters : " + str(self.selectedWidget.winfo_id())  ,bg="#999")
@@ -535,6 +536,8 @@ class MainWindow:
                 entry.bind("<FocusOut>", self.changeParam)
             if  key in colorProperties:
                 entry.bind("<Double-Button-1>", self.chosecolor)
+                tooltip=CreateToolTip(entry, text="Double click to chose a color")
+
             i += 1
 
 
