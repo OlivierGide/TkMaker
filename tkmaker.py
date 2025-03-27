@@ -491,9 +491,23 @@ class MainWindow:
         #Get the list of parameters
         param = self.selectedWidget.keys().copy()
         #we display the parameters in the right panel
+
+        #Before displaying we diplays the widget name with an entry widget to change it
+        #Grey big labl with the mention "Other option"
+        labelOther = tk.Label(self.frm_param, text="Other options",bg="#999")
+        labelOther.grid(row=0, column=0,columnspan=2,sticky=(tk.W,tk.E))
+        #we display the widget name with an entry widget to change it
+        labelName = tk.Label(self.frm_param, text="Name")
+        labelName.grid(row=1, column=0, sticky=tk.W)    
+        entryName = tk.Entry(self.frm_param)
+        entryName.insert(0, widgetnames[str(self.selectedWidget.winfo_id())])
+        entryName.grid(row=1, column=1, sticky=tk.W)
+        entryName.bind("<FocusOut>", self.changeName)
+
+        #Grey big labl with the mention "Parameters"
         label2 = tk.Label(self.frm_param, text="Parameters : " + str(self.selectedWidget.winfo_id())  ,bg="#999")
-        label2.grid(row=0, column=0,columnspan=2,sticky=(tk.W,tk.E))
-        i = 1
+        label2.grid(row=2, column=0,columnspan=2,sticky=(tk.W,tk.E))
+        i = 3
         for key in param:
             #we dont display all the parameter 
             if key in hidenProperties:
@@ -501,14 +515,24 @@ class MainWindow:
             #we display the parameter name
             label = tk.Label(self.frm_param, text=key)
             label.grid(row=i, column=0, sticky=tk.W)
-            #we display the parameter value
-            entry = tk.Entry(self.frm_param)
-            entry.insert(0, self.selectedWidget.cget(key))
-            entry.grid(row=i, column=1, sticky=tk.W)
-            #we save the entry widget in a list
-            self.paramEntryList[entry.winfo_id()] = key
-            #we bind the entry widget to the change event
-            entry.bind("<FocusOut>", self.changeParam)
+            #If the parameter is in the list of predefined values we display a combobox
+            if key in listProperties:
+                entry = ttk.Combobox(self.frm_param, values=listProperties[key],width=17)
+                entry.insert(0, self.selectedWidget.cget(key))
+                entry.grid(row=i, column=1, sticky=tk.W)
+                #we save the entry widget in a list
+                self.paramEntryList[entry.winfo_id()] = key
+                #we bind the entry widget to the change event
+                entry.bind("<<ComboboxSelected>>", self.changeParam)    
+            else:
+                #we display the parameter value
+                entry = tk.Entry(self.frm_param)
+                entry.insert(0, self.selectedWidget.cget(key))
+                entry.grid(row=i, column=1, sticky=tk.W)
+                #we save the entry widget in a list
+                self.paramEntryList[entry.winfo_id()] = key
+                #we bind the entry widget to the change event
+                entry.bind("<FocusOut>", self.changeParam)
             if  key in colorProperties:
                 entry.bind("<Double-Button-1>", self.chosecolor)
             i += 1
@@ -565,15 +589,26 @@ class MainWindow:
     def changeParam(self,event):
         #we get the parameter name
         param = self.paramEntryList[event.widget.winfo_id()]
-        if param in ["colormap","class"]:
-            return
-
+    
         #we get the parameter value
         value = event.widget.get()
         #we set the parameter value
         self.selectedWidget.config({param: value})
         self.selectedWidget.update()
         self.highlight_widget(self.selectedWidget)
+
+    # -----------------------------------------------------------------------------------------------
+    # Function called when the widget name is changed
+    # -----------------------------------------------------------------------------------------------
+    def changeName(self,event):
+        #we get the parameter value
+        value = event.widget.get()
+        #we set the parameter value
+        widgetnames[str(self.selectedWidget.winfo_id())]=value
+        self.tree.item(self.selectedWidget.winfo_id(), text=value)
+        self.selectedWidget.update()
+        self.highlight_widget(self.selectedWidget)
+
 
     # -----------------------------------------------------------------------------------------------
     # Function called when a layout option is changed
