@@ -32,6 +32,14 @@ listProperties = { "relief": ["","flat","groove","raised","ridge","solid","sunke
                    }
 
 
+# Layout options filled with a list of predefined values
+layoutOptions = { "anchor": ["n","ne","e","se","s","sw","w","nw","center"],
+                   "expand": [0,1],
+                   "fill": ["none","x","y","both"],
+                   "side": ["top","bottom","left","right"],
+                   "sticky": ["n","ne","e","se","s","sw","w","nw","nsew"],
+                   "bordermode": ["inside","outside"]
+                   }
 
 # Properties hidden, as they can ot be changed or they already exist with anothe name
 hidenProperties = ["background","foreground","class","visual","borderwidth","highlightcolor","colormap","container"]

@@ -4,7 +4,7 @@ tkmaker is a Python project that provides a graphical user interface (GUI) edito
 
 ## Version
 
-This is version alpha 1.0 of the tkmaker project.
+This is version alpha 1.1 of the tkmaker project.
 
 ## Roadmap
 - [x] Create a basic GUI editor
@@ -13,6 +13,9 @@ This is version alpha 1.0 of the tkmaker project.
 - [x] Export functionality to generate Python code
 - [x] Customizable properties for each widget
 - [x] Save and load functionality for GUI projects
+- [x] Abbility to had a nice name to the widgets
+- [ ] Complete the menu bar with options for file operations (new, open, save, exit)
+- [ ] Add a toolbar with common actions (undo, redo, cut, copy, paste)
 - [ ] Display the tkinter error messages
 - [ ] Display à preview of the generated code
 - [ ] Create fast layouts from a layout collection

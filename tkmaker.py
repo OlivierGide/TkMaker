@@ -396,8 +396,13 @@ class MainWindow:
             self.tree.insert("", "end", text=widget_name,iid=Wid.winfo_id(), image=self.appicons["price-tag-3-fill"])
         else:
             self.tree.insert(widgetparent.winfo_id(), "end", text=widget_name,iid=Wid.winfo_id(), image=self.appicons["price-tag-3-fill"])
-        #je met à jour le panneau de droite pour afficher le nouveau widget
+        #updating the drawing frame
         self.frm_Dessin.update()
+
+        #clear of the entry from the widget name
+        self.entry_widget_name.delete(0,tk.END)
+
+
 
         return Wid
 
@@ -637,23 +642,51 @@ class MainWindow:
         for key in param:
             if key in hidenLayoutOptions:
                 continue
+
+            if key in layoutOptions:
+                #we display the parameter name
+                label = tk.Label(self.frm_layout_options, text=key,width=20,anchor="w")
+                label.grid(row=i, column=0, sticky=tk.W)
+                #If the parameter is in the list of predefined values we display a combobox
+                entry = ttk.Combobox(self.frm_layout_options, values=layoutOptions[key],width=22)
+                entry.insert(0, param[key])
+                entry.grid(row=i, column=1, sticky=tk.W)
+                #we save the entry widget in a list
+                self.layoutEntryList[entry.winfo_id()] = key
+                #we bind the entry widget to the change event
+                entry.bind("<<ComboboxSelected>>", self.changeLayoutParam)    
+                i += 1
+                continue
+            else:
+                #we display the parameter name
+                label = tk.Label(self.frm_layout_options, text=key,width=20,anchor="w")
+                label.grid(row=i, column=0, sticky=tk.W)
+                #If the parameter is in the list of predefined values we display a combobox
+                entry = tk.Entry(self.frm_layout_options,width=25)
+                entry.insert(0, param[key])
+                entry.grid(row=i, column=1, sticky=tk.W)
+                #we save the entry widget in a list
+                self.layoutEntryList[entry.winfo_id()] = key
+                #we bind the entry widget to the change event
+                entry.bind("<FocusOut>", self.changeLayoutParam)
+                i += 1
             #we display the parameter name
-            label = tk.Label(self.frm_layout_options, text=key,width=20,anchor="w")
-            label.grid(row=i, column=0, sticky=tk.W)
+            #label = tk.Label(self.frm_layout_options, text=key,width=20,anchor="w")
+            #label.grid(row=i, column=0, sticky=tk.W)
             #we display the parameter value
-            entry = tk.Entry(self.frm_layout_options,width=25)
-            if layoutmetod==1:
-                entry.insert(0, self.selectedWidget.place_info().get(key))
-            if layoutmetod==2:
-                entry.insert(0, self.selectedWidget.grid_info().get(key))
-            if layoutmetod==3:
-                entry.insert(0, self.selectedWidget.pack_info().get(key))
-            entry.grid(row=i, column=1, sticky=tk.W)
+            #entry = tk.Entry(self.frm_layout_options,width=25)
+            #if layoutmetod==1:
+            #    entry.insert(0, self.selectedWidget.place_info().get(key))
+            #if layoutmetod==2:
+            #    entry.insert(0, self.selectedWidget.grid_info().get(key))
+            #if layoutmetod==3:
+            #    entry.insert(0, self.selectedWidget.pack_info().get(key))
+            #entry.grid(row=i, column=1, sticky=tk.W)
             #we save the entry widget in a list
-            self.layoutEntryList[entry.winfo_id()] = key
+            #self.layoutEntryList[entry.winfo_id()] = key
             #we bind the entry widget to the change event
-            entry.bind("<FocusOut>", self.changeLayoutParam)
-            i += 1
+            #entry.bind("<FocusOut>", self.changeLayoutParam)
+            #i += 1
 
     # -----------------------------------------------------------------------------------------------
     # Function called when a parameter is changed
@@ -673,6 +706,14 @@ class MainWindow:
     # Function called when the widget name is changed
     # -----------------------------------------------------------------------------------------------
     def changeName(self,event):
+        #check if the name is unique
+        if  event.widget.get() in widgetnames.values():
+            tk.messagebox.showinfo("Error", "The widget name must be unique")
+            #we set the parameter value to the old value
+            event.widget.delete(0,tk.END)
+            event.widget.insert(0, widgetnames[str(self.selectedWidget.winfo_id())])
+            return None
+
         #we get the parameter value
         value = event.widget.get()
         #we set the parameter value
