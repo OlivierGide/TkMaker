@@ -19,8 +19,78 @@ widgetnames = {} #List of widget names
 currentProjectFile = "" #Current project file
 
 class MainWindow:
+    """
+    MainWindow class provides a graphical user interface for creating and managing Tkinter widgets.
+    This class allows users to design a GUI by adding, configuring, and arranging widgets interactively.
+    It includes features for saving, exporting, and loading projects, as well as generating Python code
+    for the designed GUI.
+    Attributes:
+        root (tk.Tk): The main application window.
+        paramEntryList (dict): Dictionary to store entry widgets for widget parameters.
+        layoutEntryList (dict): Dictionary to store entry widgets for layout parameters.
+        selectionFrameList (list): List of frames used to highlight selected widgets.
+        widget_type_list (list): List of widget types for the combo box.
+        selectedWidget (tk.Widget): The currently selected widget.
+        LayoutSelection (tk.IntVar): Variable to store the selected layout mode.
+        appicons (dict): Dictionary containing all the icons used in the application.
+        frm_structure (tk.Frame): Frame for the widget treeview and controls.
+        frm_Dessin (tk.Frame): Frame for drawing widgets.
+        frm_param (tk.Frame): Frame for displaying widget parameters.
+        frm_ajout (tk.Frame): Frame containing controls to add or remove widgets.
+        lbl_widget_type (tk.Label): Label for widget type selection.
+        combo_widget_type (ttk.Combobox): Combobox for selecting widget types.
+        lbl_widget_layout (tk.Label): Label for layout mode selection.
+        R1, R2, R3 (tk.Radiobutton): Radiobuttons for selecting layout modes (place, grid, pack).
+        frm_actions (tk.Frame): Frame containing action buttons (add, remove, save, export).
+        tree (ttk.Treeview): Treeview for displaying the widget hierarchy.
+        frm_layout_options (tk.Frame): Frame for displaying layout options.
+        menu_bar (tk.Menu): Menu bar for file operations.
+    Methods:
+        __init__(root):
+            Initializes the MainWindow class and sets up the GUI layout and components.
+        open_file():
+            Opens a file dialog to load a project and initializes the GUI with the loaded data.
+        export_project():
+            Exports the current project as Python code.
+        save_project():
+            Saves the current project as a backup.
+        quit():
+            Exits the application.
+        addWidget(widget_type=None, widget_name=None, layout_mode=None, parent_widget=None):
+            Adds a new widget to the GUI.
+        getPackingMetod(widget):
+            Determines the layout method (place, grid, pack) used by a widget.
+        removeWidget():
+            Removes the currently selected widget.
+        highlight_widget(widget):
+            Draws a frame around the selected widget to highlight it.
+        selectionWidget(event):
+            Handles widget selection via a left-click on the widget.
+        chosecolor(event):
+            Opens a color picker dialog to select a color for a widget property.
+        displayOptions():
+            Displays the parameters and layout options of the selected widget.
+        changeParam(event):
+            Updates a widget parameter when it is changed.
+        changeName(event):
+            Updates the name of the selected widget.
+        changeLayoutParam(event):
+            Updates a layout option of the selected widget.
+        selectionTree(event):
+            Handles widget selection via the treeview.
+        generateCode(mode="EXPORT"):
+            Generates Python code for the current GUI design.
+        getDefaultParameters(widget):
+            Retrieves the default parameters of a widget.
+        loadWidgetList(widgetparent=None):
+            Loads the list of widgets during project loading.
+        loadWidgetNames():
+            Loads the names of widgets during project loading.
+        loadTreeView():
+            Loads the treeview with the widget hierarchy during project loading.
+    """
     # -----------------------------------------------------------------------------------------------
-    # Constructeur de la classe
+    # Class constructor
     # -----------------------------------------------------------------------------------------------
     def __init__(self, root):
         self.root = root
@@ -34,16 +104,11 @@ class MainWindow:
         self.LayoutSelection = IntVar()
         self.LayoutSelection.set(1)
 
-        # Apply ttk theme
-        #self.style = ThemedStyle(self.root)
-        #self.style.theme_use('adapta')
-
         # Configuration grid
         self.root.grid_columnconfigure(0, weight=0, minsize=250,pad=0)
         self.root.grid_columnconfigure(1, weight=1,pad=0)
         self.root.grid_rowconfigure(0, weight=1, pad=0)
         
-
         # This colletion contains all the icons used in the application
         self.appicons = {}
         for file in os.listdir("icons"):
@@ -51,7 +116,6 @@ class MainWindow:
                 self.appicons[file.split(".")[0]] = tk.PhotoImage(file=f"icons/{file}")
         
     
-
         # left frame for widget treeview and controls
         self.frm_structure = tk.Frame(self.root,padx=0,pady=0)
         self.frm_structure.grid(row=0, column=0, sticky=(tk.W,tk.E,tk.N, tk.S))
@@ -385,12 +449,12 @@ class MainWindow:
         self.selectionFrameList = []
         
     # -----------------------------------------------------------------------------------------------
-    # Fonction qui permet de mettre en surbrillance un widget
+    # Function that draws a frame around the selected widget
     # -----------------------------------------------------------------------------------------------   
     def highlight_widget(self,widget):
-        #On desine un cadre autour du widget selectionné
-        #On recupere les coordonnées du widget
-        #pour ce faire on boucle sur chaque parent tant que master n'est pas none en aditionnant les coordonnées
+        # We draw a frame around the selected widget
+        # We retrieve the coordinates of the widget
+        # To do this, we loop through each parent as long as master is not None, adding the coordinates
         x = 0
         y = 0
         w = widget.winfo_width()
@@ -401,11 +465,11 @@ class MainWindow:
             y += widget.winfo_y()
             widget = widget.master
 
-        #On supprime les anciens cadres
+        # We delete the old frames
         for frame in self.selectionFrameList:
             frame.destroy()
         self.selectionFrameList = []
-        #On dessine les nouveaux cadres
+        # We draw the new frames
     
         selectionT = tk.Canvas(self.root,width=w, height=2, bg="red",borderwidth=0,highlightthickness=0)
         selectionT.place(x=x,y=y) 
