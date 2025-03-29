@@ -316,7 +316,12 @@ class MainWindow:
         
         if widget_name == None:
             widget_name = self.entry_widget_name.get()
+            #we check if the name is unique
+            if  widget_name in widgetnames.values():
+                tk.messagebox.showinfo("Error", "The widget name must be unique")
+                return None
         
+
         #we get the selected widget type from the combobox
         if widget_type == None:
             widget_type = list(WidgetType)[self.combo_widget_type.current()]  
@@ -493,30 +498,30 @@ class MainWindow:
         self.root.update()
 
     # -----------------------------------------------------------------------------------------------
-    # Fonction appelée lorsqu'un widget est selectionné via un clic gauche sur le widget
-    # elle permet de selectionner le widget dans le treeview de gauche
+    # Function called when a widget is selected via a left-click on the widget
+    # It allows selecting the widget in the treeview on the left
     # -----------------------------------------------------------------------------------------------
     def selectionWidget(self,event):
-        #si le widget est selectionné est le meme que le widget selectionné précédemment on le deselectionne
+        # If the selected widget is the same as the previously selected widget, deselect it
         if app.selectedWidget == event.widget:
             app.selectedWidget = None
-            #On supprime les cadres de selection    
+            #Removing the selection frame    
             for frame in app.selectionFrameList:
                 frame.destroy()
             app.selectionFrameList = []
-            #On deselectionne le widget dans le treeview
+            #Removing the selection in the treeview
             app.tree.selection_remove(app.tree.selection())
             self.displayOptions()
             return
         
         app.selectedWidget = event.widget
 
-        #On selectionne le widget dans le treeview  
+        #selecting the widget in the treeview
         app.tree.selection_set(app.selectedWidget.winfo_id())
-        #On affiche le cadre autour du widget
+        #Diplaying the frame around the selected widget
         self.highlight_widget(self.selectedWidget)
 
-        #we display the parameters in the right panel
+        #we display the parameters in the right panel and the layout options in the left panel
         self.displayOptions()
     
     # -----------------------------------------------------------------------------------------------
